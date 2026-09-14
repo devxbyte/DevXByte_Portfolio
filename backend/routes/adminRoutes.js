@@ -58,11 +58,61 @@ router.delete('/messages/:id', protect, contactController.deleteMessage);
 // Settings
 router.put('/settings', protect, settingsController.updateSettings);
 
+const cloudinary = require('cloudinary').v2;
+const File = require('../models/File');
+const { Readable } = require('stream');
+
 // File Upload
-router.post('/upload', protect, upload.single('file'), (req, res) => {
+router.post('/upload', protect, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  const fileUrl = req.file.path; // Cloudinary secure URL
-  res.json({ url: fileUrl, filename: req.file.filename || req.file.path });
+
+  if (req.file.mimetype === 'application/pdf') {
+    try {
+      const newFile = new File({
+        filename: req.file.originalname,
+        contentType: req.file.mimetype,
+        data: req.file.buffer
+      });
+      const savedFile = await newFile.save();
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      const fileUrl = `${baseUrl}/api/admin/file/${savedFile._id}`;
+      return res.json({ url: fileUrl, filename: req.file.originalname });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error saving PDF to database', error: err.message });
+    }
+  } else {
+    try {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'portfolio', resource_type: 'auto' },
+        (error, result) => {
+          if (error) {
+            console.error("Cloudinary Error:", error);
+            return res.status(500).json({ message: 'Error uploading to Cloudinary', error: error.message || error });
+          }
+          res.json({ url: result.secure_url, filename: req.file.originalname });
+        }
+      );
+      Readable.from(req.file.buffer).pipe(stream);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error initiating upload', error: err.message });
+    }
+  }
+});
+
+// Serve File from MongoDB
+router.get('/file/:id', async (req, res) => {
+  try {
+    const file = await File.findById(req.params.id);
+    if (!file) return res.status(404).json({ message: 'File not found' });
+    
+    res.set('Content-Type', file.contentType);
+    res.send(file.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 module.exports = router;
