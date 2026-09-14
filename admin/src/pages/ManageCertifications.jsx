@@ -8,7 +8,7 @@ const ManageCertifications = () => {
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ title: '', issuer: '', description: '', pdf: '', order: 0 });
+  const [form, setForm] = useState({ title: '', issuer: '', description: '', pdf: '', image: '', order: 0 });
   const [loading, setLoading] = useState(false);
 
   const fetchItems = () => { api.get('/certifications', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') }).then(r => setItems(r.data)).catch(() => {}); };
@@ -37,7 +37,27 @@ const ManageCertifications = () => {
     setLoading(false);
   };
 
-  const openNew = () => { setEditing(null); setForm({ title: '', issuer: '', description: '', pdf: '', order: 0 }); setShowModal(true); };
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload a valid image file');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    setLoading(true);
+    try {
+      const res = await api.post('/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setForm({ ...form, image: `${import.meta.env.VITE_BACKEND_URL}${res.data.url}` });
+      toast.success('Image uploaded');
+    } catch (err) {
+      toast.error('Upload failed');
+    }
+    setLoading(false);
+  };
+
+  const openNew = () => { setEditing(null); setForm({ title: '', issuer: '', description: '', pdf: '', image: '', order: 0 }); setShowModal(true); };
   const openEdit = (item) => { setEditing(item._id); setForm(item); setShowModal(true); };
 
   const handleSubmit = async (e) => {
@@ -76,7 +96,8 @@ const ManageCertifications = () => {
               <div className="form-group"><label className="form-label">Title</label><input className="form-input" name="title" value={form.title} onChange={handleChange} required /></div>
               <div className="form-group"><label className="form-label">Issuer</label><input className="form-input" name="issuer" value={form.issuer} onChange={handleChange} required /></div>
               <div className="form-group"><label className="form-label">Description</label><textarea className="form-textarea" name="description" value={form.description || ''} onChange={handleChange} /></div>
-              <div className="form-group"><label className="form-label">PDF Certificate</label><input type="file" className="form-input" accept="application/pdf" onChange={handlePdfUpload} />{form.pdf && <div style={{marginTop: '10px'}}><a href={form.pdf} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>View Uploaded PDF</a></div>}</div>
+              <div className="form-group"><label className="form-label">PDF Certificate (Optional)</label><input type="file" className="form-input" accept="application/pdf" onChange={handlePdfUpload} />{form.pdf && <div style={{marginTop: '10px'}}><a href={form.pdf} target="_blank" rel="noopener noreferrer" style={{color: 'var(--primary)', textDecoration: 'underline'}}>View Uploaded PDF</a></div>}</div>
+              <div className="form-group"><label className="form-label">Image Preview (Optional)</label><input type="file" className="form-input" accept="image/*" onChange={handleImageUpload} />{form.image && <div style={{marginTop: '10px'}}><img src={form.image} alt="Preview" style={{maxHeight: '100px', borderRadius: '4px'}} /></div>}</div>
               <div className="form-group"><label className="form-label">Order</label><input className="form-input" type="number" name="order" value={form.order} onChange={handleChange} /></div>
               <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}><button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button><button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button></div>
             </form>
