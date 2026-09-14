@@ -61,8 +61,8 @@ router.put('/settings', protect, settingsController.updateSettings);
 // File Upload
 router.post('/upload', protect, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.json({ url: fileUrl, filename: req.file.filename });
+  const fileUrl = req.file.path; // Cloudinary secure URL
+  res.json({ url: fileUrl, filename: req.file.filename || req.file.path });
 });
 
 module.exports = router;
