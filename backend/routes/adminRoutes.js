@@ -72,43 +72,19 @@ cloudinary.config({
 router.post('/upload', protect, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-  if (req.file.mimetype === 'application/pdf') {
-    try {
-      const newFile = new File({
-        filename: req.file.originalname,
-        contentType: req.file.mimetype,
-        data: req.file.buffer
-      });
-      const savedFile = await newFile.save();
-      const baseUrl = `${req.protocol}://${req.get('host')}`;
-      const fileUrl = `${baseUrl}/api/admin/file/${savedFile._id}`;
-      return res.json({ url: fileUrl, filename: req.file.originalname });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error saving PDF to database', error: err.message });
-    }
-  } else {
-    try {
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'portfolio', resource_type: 'auto' },
-          (error, result) => {
-            if (error) {
-              console.error("Cloudinary Stream Error:", error);
-              return reject(error);
-            }
-            resolve(result);
-          }
-        );
-        Readable.from(req.file.buffer).pipe(stream);
-      });
-      return res.json({ url: result.secure_url, filename: req.file.originalname });
-    } catch (err) {
-      console.error("Cloudinary Catch Error:", err);
-      // Sometimes Cloudinary returns an object with {message, http_code} instead of a standard Error
-      const errMsg = err.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
-      return res.status(500).json({ message: 'Error uploading to Cloudinary', error: errMsg });
-    }
+  try {
+    const newFile = new File({
+      filename: req.file.originalname,
+      contentType: req.file.mimetype,
+      data: req.file.buffer
+    });
+    const savedFile = await newFile.save();
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const fileUrl = `${baseUrl}/api/admin/file/${savedFile._id}`;
+    return res.json({ url: fileUrl, filename: req.file.originalname });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Error saving file to database', error: err.message });
   }
 });
 
