@@ -53,6 +53,16 @@ const HomePage = ({ hero, about, projects, skills }) => {
       scrollTrigger: { trigger: '.skills-marquee', start: 'top 85%' }
     });
 
+    // Pin the projects section when its bottom hits the bottom of the viewport
+    if (projectsRef.current) {
+      ScrollTrigger.create({
+        trigger: projectsRef.current,
+        start: 'bottom bottom',
+        pin: true,
+        pinSpacing: false,
+      });
+    }
+
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
 
@@ -238,10 +248,13 @@ const HomePage = ({ hero, about, projects, skills }) => {
         </div>
       </section>
 
-      {/* ===== CTA ===== */}
-      <CTASection />
+      {/* ===== OVERLAPPING CTA & FOOTER ===== */}
+      <div className="cta-footer-overlay" style={{ position: 'relative', zIndex: 20, backgroundColor: 'var(--bg-primary)' }}>
+        {/* ===== CTA ===== */}
+        <CTASection />
 
-      <Footer />
+        <Footer />
+      </div>
       </div>
     </>
   );
