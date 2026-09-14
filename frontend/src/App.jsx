@@ -110,7 +110,7 @@ function App() {
     name: 'DEVENDRA SAINI', subtitle: 'Full-Stack Developer',
     description: 'Building ideas that inspire trust in the modern world. Together we will shape the next big vision.',
     typingTexts: ['Full-Stack Developer', 'React Developer', 'MERN Stack Developer'],
-    socialLinks: { github: 'https://github.com/devusaini', linkedin: 'https://linkedin.com/in/devusaini' }
+    socialLinks: { github: 'https://github.com/devxbyte', linkedin: 'https://www.linkedin.com/in/devxbyte' }
   };
 
   const projData = projects.length ? projects : [

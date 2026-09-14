@@ -62,9 +62,9 @@ const Header = () => {
           </div>
 
           <div className="nav-socials">
-            <a href="https://github.com/devusaini" target="_blank" rel="noopener noreferrer" className="nav-social">Github</a>
-            <a href="https://linkedin.com/in/devusaini" target="_blank" rel="noopener noreferrer" className="nav-social">LinkedIn</a>
-            <a href="https://instagram.com/devusaini" target="_blank" rel="noopener noreferrer" className="nav-social">Instagram</a>
+            <a href="https://github.com/devxbyte" target="_blank" rel="noopener noreferrer" className="nav-social">Github</a>
+            <a href="https://www.linkedin.com/in/devxbyte" target="_blank" rel="noopener noreferrer" className="nav-social">LinkedIn</a>
+            <a href="https://www.instagram.com/dev.__saini" target="_blank" rel="noopener noreferrer" className="nav-social">Instagram</a>
           </div>
         </div>
       </div>

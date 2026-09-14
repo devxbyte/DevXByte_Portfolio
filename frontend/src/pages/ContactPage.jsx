@@ -84,9 +84,10 @@ const ContactPage = () => {
 
             <div className="contact-sidebar-section">
               <div className="contact-sidebar-label">Socials</div>
-              <div className="contact-sidebar-links">
-                <a href="https://github.com/devusaini" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">Github</a>
-                <a href="https://linkedin.com/in/devusaini" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">LinkedIn</a>
+              <div className="contact-sidebar-social">
+                <a href="https://github.com/devxbyte" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">Github</a>
+                <a href="https://www.linkedin.com/in/devxbyte" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">LinkedIn</a>
+                <a href="https://www.instagram.com/dev.__saini" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">Instagram</a>
               </div>
             </div>
           </div>
@@ -98,8 +99,8 @@ const ContactPage = () => {
           <span>© 2025 Edition</span>
         </div>
         <div className="footer-socials">
-          <a href="https://github.com/devusaini" target="_blank" rel="noopener noreferrer" className="footer-social">Github</a>
-          <a href="https://linkedin.com/in/devusaini" target="_blank" rel="noopener noreferrer" className="footer-social">LinkedIn</a>
+          <a href="https://github.com/devxbyte" target="_blank" rel="noopener noreferrer" className="footer-social">Github</a>
+          <a href="https://www.linkedin.com/in/devxbyte" target="_blank" rel="noopener noreferrer" className="footer-social">LinkedIn</a>
         </div>
       </footer>
     </>
