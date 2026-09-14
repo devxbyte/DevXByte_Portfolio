@@ -14,11 +14,11 @@ const app = express();
 connectDB();
 
 // Middleware
+const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+const adminUrl = (process.env.ADMIN_URL || 'http://localhost:5174').replace(/\/$/, '');
+
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    process.env.ADMIN_URL || 'http://localhost:5174'
-  ],
+  origin: [frontendUrl, adminUrl],
   credentials: true
 }));
 app.use(express.json());
