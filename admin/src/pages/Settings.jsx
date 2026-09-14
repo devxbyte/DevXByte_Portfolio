@@ -8,7 +8,7 @@ const Settings = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.get('/settings', { baseURL: import.meta.env.VITE_API_URL })
+    api.get('/settings', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') })
       .then(r => { if (r.data && r.data.siteTitle) setForm(r.data); }).catch(() => {});
   }, []);
 

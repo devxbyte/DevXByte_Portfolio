@@ -11,10 +11,10 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const [projRes, msgRes, unreadRes, skillRes] = await Promise.allSettled([
-          api.get('/projects', { baseURL: import.meta.env.VITE_API_URL }),
+          api.get('/projects', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') }),
           api.get('/messages'),
           api.get('/messages/unread'),
-          api.get('/skills', { baseURL: import.meta.env.VITE_API_URL })
+          api.get('/skills', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') })
         ]);
 
         setStats({

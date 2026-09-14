@@ -11,7 +11,7 @@ const ManageSkills = () => {
   const [form, setForm] = useState({ category: '', name: '', level: 50, order: 0 });
   const [loading, setLoading] = useState(false);
 
-  const fetchSkills = () => { api.get('/skills', { baseURL: import.meta.env.VITE_API_URL }).then(res => setSkills(res.data)).catch(() => {}); };
+  const fetchSkills = () => { api.get('/skills', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') }).then(res => setSkills(res.data)).catch(() => {}); };
   useEffect(() => { fetchSkills(); }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });

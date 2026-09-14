@@ -11,7 +11,7 @@ const ManageEducation = () => {
   const [form, setForm] = useState({ institution: '', degree: '', location: '', startDate: '', endDate: 'Present', order: 0 });
   const [loading, setLoading] = useState(false);
 
-  const fetchItems = () => { api.get('/education', { baseURL: import.meta.env.VITE_API_URL }).then(r => setItems(r.data)).catch(() => {}); };
+  const fetchItems = () => { api.get('/education', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') }).then(r => setItems(r.data)).catch(() => {}); };
   useEffect(() => { fetchItems(); }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });

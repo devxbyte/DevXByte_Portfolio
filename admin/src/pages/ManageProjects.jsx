@@ -13,7 +13,7 @@ const ManageProjects = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchProjects = () => {
-    api.get('/projects', { baseURL: import.meta.env.VITE_API_URL })
+    api.get('/projects', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') })
       .then(res => setProjects(res.data)).catch(() => {});
   };
 

@@ -8,7 +8,7 @@ const ManageAbout = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.get('/about', { baseURL: import.meta.env.VITE_API_URL })
+    api.get('/about', { baseURL: (import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://backend-pi-rosy-72.vercel.app/api') })
       .then(res => { if (res.data && res.data.title) setForm(res.data); })
       .catch(() => {});
   }, []);
