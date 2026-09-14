@@ -3,7 +3,9 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-const API = `${import.meta.env.VITE_API_URL || 'https://backend-pi-rosy-72.vercel.app/api'}/admin`;
+const API = import.meta.env.DEV 
+  ? 'http://localhost:5000/api/admin'
+  : 'https://backend-pi-rosy-72.vercel.app/api/admin';
 
 export const AuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
