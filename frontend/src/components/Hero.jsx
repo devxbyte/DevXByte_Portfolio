@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from '../hooks/useGsap';
+import { getImageUrl } from '../utils/api';
 import ThreeBackground from './ThreeBackground';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import { HiDownload } from 'react-icons/hi';
@@ -93,7 +94,7 @@ const Hero = ({ data }) => {
             Get In Touch
           </button>
           {data?.resumeUrl && (
-            <a href={data.resumeUrl} className="btn btn-outline" target="_blank" rel="noopener noreferrer">
+            <a href={getImageUrl(data.resumeUrl)} className="btn btn-outline" target="_blank" rel="noopener noreferrer">
               <HiDownload /> Resume
             </a>
           )}

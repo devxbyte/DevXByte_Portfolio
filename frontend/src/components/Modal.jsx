@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { HiX, HiExternalLink } from 'react-icons/hi';
+import { getImageUrl } from '../utils/api';
 import '../styles/modal.css';
 
 const Modal = ({ isOpen, onClose, data, type }) => {
@@ -25,9 +26,9 @@ const Modal = ({ isOpen, onClose, data, type }) => {
         
         <div className="modal-image-container" style={{ flex: data.pdf ? '1 1 100%' : undefined, minHeight: data.pdf ? '70vh' : undefined }}>
           {data.pdf ? (
-            <iframe src={`${data.pdf}#toolbar=0&navpanes=0`} width="100%" height="100%" loading="lazy" style={{ border: 'none', minHeight: '70vh', borderRadius: '8px' }} title={data.title} />
+            <iframe src={`${getImageUrl(data.pdf)}#toolbar=0&navpanes=0`} width="100%" height="100%" loading="lazy" style={{ border: 'none', minHeight: '70vh', borderRadius: '8px' }} title={data.title} />
           ) : data.image ? (
-            <img src={data.image} alt={data.title} className="modal-image" />
+            <img src={getImageUrl(data.image)} alt={data.title} className="modal-image" />
           ) : (
             <div className="modal-image-placeholder">No Image Available</div>
           )}

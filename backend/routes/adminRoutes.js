@@ -79,8 +79,8 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
       data: req.file.buffer
     });
     const savedFile = await newFile.save();
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const fileUrl = `${baseUrl}/api/admin/file/${savedFile._id}`;
+    const protocol = req.get('host').includes('localhost') ? 'http' : 'https';
+    const fileUrl = `${protocol}://${req.get('host')}/api/admin/file/${savedFile._id}`;
     return res.json({ url: fileUrl, filename: req.file.originalname });
   } catch (err) {
     console.error(err);
