@@ -53,6 +53,7 @@ input, textarea, select { font-family: inherit; outline: none; }
   margin-left: 260px;
   padding: 32px;
   min-height: 100vh;
+  min-width: 0;
 }
 
 /* ============ SIDEBAR ============ */
