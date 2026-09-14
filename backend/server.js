@@ -10,8 +10,15 @@ dotenv.config();
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 // Middleware
 const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
