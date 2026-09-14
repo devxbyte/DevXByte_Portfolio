@@ -105,7 +105,13 @@ const HomePage = ({ hero, about, projects, skills }) => {
             name={hero?.name?.trim() ? hero.name.trim().toUpperCase() : 'DEVENDRA SAINI'}
             role={hero?.subtitle || 'Web Developer'}
             description={hero?.description ? hero.description.split('.').slice(0, 1).join('.') + '.' : 'I build beautiful, responsive websites.'}
-            photoUrl={hero?.image ? (hero.image.startsWith('http') ? hero.image : `${import.meta.env.VITE_BACKEND_URL}${hero.image}`) : '/profile.jpg'}
+            photoUrl={(() => {
+              if (!hero?.image) return '/Devendra_Saini.png';
+              if (hero.image.includes('localhost') && !import.meta.env.DEV) return '/Devendra_Saini.png';
+              if (hero.image.startsWith('http')) return hero.image;
+              const safePath = hero.image.startsWith('/') ? hero.image : `/${hero.image}`;
+              return `${import.meta.env.VITE_BACKEND_URL}${safePath}`;
+            })()}
             linkedin={hero?.socialLinks?.linkedin || 'https://www.linkedin.com/in/devxbyte/?skipRedirect=true'}
             github={hero?.socialLinks?.github || 'https://github.com/devxbyte'}
             instagram={hero?.socialLinks?.instagram || 'https://www.instagram.com/dev.__saini?stkn=MTBuNGJ6YTY3N3hkYw=='}

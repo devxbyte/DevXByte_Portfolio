@@ -60,11 +60,17 @@ const HolographicImage = ({ image }) => {
       <div className="holo-card" ref={cardRef}>
         <div className="holo-border"></div>
         <div className="holo-glass">
-          {image ? (
-            <img src={image} alt="Profile" />
-          ) : (
-            <div className="about-image-placeholder">D</div>
-          )}
+          {(() => {
+            const getSafeImage = (img) => {
+              if (!img) return '/Devendra_Saini.png';
+              if (img.includes('localhost') && !import.meta.env.DEV) return '/Devendra_Saini.png';
+              if (img.startsWith('http')) return img;
+              const safePath = img.startsWith('/') ? img : `/${img}`;
+              return `${import.meta.env.VITE_BACKEND_URL}${safePath}`;
+            };
+            const finalImage = getSafeImage(image);
+            return <img src={finalImage} alt="Profile" />;
+          })()}
         </div>
         <span className="holo-accent top-left"></span>
         <span className="holo-accent top-right"></span>
