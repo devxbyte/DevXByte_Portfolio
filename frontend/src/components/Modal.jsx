@@ -25,7 +25,7 @@ const Modal = ({ isOpen, onClose, data, type }) => {
         
         <div className="modal-image-container" style={{ flex: data.pdf ? '1 1 100%' : undefined, minHeight: data.pdf ? '70vh' : undefined }}>
           {data.pdf ? (
-            <iframe src={data.pdf} width="100%" height="100%" style={{ border: 'none', minHeight: '70vh', borderRadius: '8px' }} title={data.title} />
+            <iframe src={`${data.pdf}#toolbar=0&navpanes=0`} width="100%" height="100%" loading="lazy" style={{ border: 'none', minHeight: '70vh', borderRadius: '8px' }} title={data.title} />
           ) : data.image ? (
             <img src={data.image} alt={data.title} className="modal-image" />
           ) : (
