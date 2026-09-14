@@ -20,4 +20,14 @@ export const fetchEducation = () => api.get('/education');
 export const fetchCertifications = () => api.get('/certifications');
 export const submitContact = (data) => api.post('/contact', data);
 
+export const getImageUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  
+  // Extract host without /api
+  const hostUrl = API_BASE.replace('/api', '');
+  const safePath = path.startsWith('/') ? path : `/${path}`;
+  return `${hostUrl}${safePath}`;
+};
+
 export default api;
