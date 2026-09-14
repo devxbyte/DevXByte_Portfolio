@@ -14,7 +14,7 @@ const WorkPage = ({ projects }) => {
     gsap.utils.toArray('.work-project-item').forEach((item) => {
       gsap.fromTo(item, { opacity: 0, x: 40 }, {
         opacity: 1, x: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play reverse play reverse' }
+        scrollTrigger: { trigger: item, start: 'top 85%' }
       });
     });
     return () => ScrollTrigger.getAll().forEach(t => t.kill());

@@ -43,7 +43,7 @@ const HomePage = ({ hero, about, projects, skills }) => {
     gsap.utils.toArray('.project-item').forEach((item) => {
       gsap.fromTo(item, { opacity: 0, x: 40 }, {
         opacity: 1, x: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play reverse play reverse' }
+        scrollTrigger: { trigger: item, start: 'top 85%' }
       });
     });
 
@@ -53,7 +53,22 @@ const HomePage = ({ hero, about, projects, skills }) => {
       scrollTrigger: { trigger: '.skills-marquee', start: 'top 85%' }
     });
 
-    // Removed horizontal scroll sequence
+    // Horizontal Scroll Sequence: Projects -> CTA
+    const ctaPanel = ctaPanelRef.current;
+    if (ctaPanel) {
+      // Pin at the bottom of the projects section, then immediately slide CTA in from right
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: horizontalScrollRef.current,
+          start: 'bottom bottom',
+          pin: true,
+          scrub: 1,
+          end: () => "+=" + window.innerWidth // reduced scroll distance to remove pause
+        }
+      });
+
+      tl.to(ctaPanel, { xPercent: -100, ease: 'none', duration: 1 });
+    }
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
@@ -208,6 +223,8 @@ const HomePage = ({ hero, about, projects, skills }) => {
       </section>
 
       {/* ===== VERTICAL TO HORIZONTAL SCROLL CONTAINER ===== */}
+      <div className="horizontal-scroll-container" ref={horizontalScrollRef}>
+        
         {/* PANEL 1: PROJECTS */}
         <section className="projects-section projects-section--enhanced" ref={projectsRef}>
           {/* Three.js Glow Grid Background — lazy loaded, skipped on mobile */}
@@ -242,8 +259,12 @@ const HomePage = ({ hero, about, projects, skills }) => {
           </div>
         </section>
 
-        {/* PANEL 2: CTA */}
-        <CTASection />
+        {/* PANEL 2: CTA (Absolute Right) */}
+        <div className="cta-panel" ref={ctaPanelRef}>
+          <CTASection />
+        </div>
+
+      </div>
 
       <Footer />
       </div>
