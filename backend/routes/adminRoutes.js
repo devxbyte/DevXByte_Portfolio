@@ -89,20 +89,25 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
     }
   } else {
     try {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: 'portfolio', resource_type: 'auto' },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary Error:", error);
-            return res.status(500).json({ message: 'Error uploading to Cloudinary', error: error.message || error });
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'portfolio', resource_type: 'auto' },
+          (error, result) => {
+            if (error) {
+              console.error("Cloudinary Stream Error:", error);
+              return reject(error);
+            }
+            resolve(result);
           }
-          res.json({ url: result.secure_url, filename: req.file.originalname });
-        }
-      );
-      Readable.from(req.file.buffer).pipe(stream);
+        );
+        Readable.from(req.file.buffer).pipe(stream);
+      });
+      return res.json({ url: result.secure_url, filename: req.file.originalname });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error initiating upload', error: err.message });
+      console.error("Cloudinary Catch Error:", err);
+      // Sometimes Cloudinary returns an object with {message, http_code} instead of a standard Error
+      const errMsg = err.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
+      return res.status(500).json({ message: 'Error uploading to Cloudinary', error: errMsg });
     }
   }
 });
