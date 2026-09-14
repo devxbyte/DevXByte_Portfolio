@@ -2683,31 +2683,7 @@ textarea {
   }
 }
 
-/* Vertical to Horizontal Scroll Container */
-.horizontal-scroll-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden; /* prevents horizontal scrollbar */
-  background-color: var(--bg-primary);
-}
 
-.cta-panel {
-  position: absolute;
-  bottom: 0;
-  left: 100vw;
-  width: 100vw;
-  height: 100vh;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-}
-
-.cta-panel > section,
-.cta-panel > div {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-}
 
 /* MOBILE ID BADGE OVERRIDES (Moved to end for precedence) */
 @media (max-width: 768px) {

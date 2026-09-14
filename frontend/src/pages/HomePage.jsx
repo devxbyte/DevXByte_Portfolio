@@ -53,23 +53,6 @@ const HomePage = ({ hero, about, projects, skills }) => {
       scrollTrigger: { trigger: '.skills-marquee', start: 'top 85%' }
     });
 
-    // Horizontal Scroll Sequence: Projects -> CTA
-    const ctaPanel = ctaPanelRef.current;
-    if (ctaPanel) {
-      // Pin at the bottom of the projects section, then immediately slide CTA in from right
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: horizontalScrollRef.current,
-          start: 'bottom bottom',
-          pin: true,
-          scrub: 1,
-          end: () => "+=" + window.innerWidth // reduced scroll distance to remove pause
-        }
-      });
-
-      tl.to(ctaPanel, { xPercent: -100, ease: 'none', duration: 1 });
-    }
-
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
 
@@ -222,49 +205,41 @@ const HomePage = ({ hero, about, projects, skills }) => {
         </div>
       </section>
 
-      {/* ===== VERTICAL TO HORIZONTAL SCROLL CONTAINER ===== */}
-      <div className="horizontal-scroll-container" ref={horizontalScrollRef}>
-        
-        {/* PANEL 1: PROJECTS */}
-        <section className="projects-section projects-section--enhanced" ref={projectsRef}>
-          {/* Three.js Glow Grid Background — lazy loaded, skipped on mobile */}
-          <Suspense fallback={null}><GlowGrid /></Suspense>
+      {/* ===== PROJECTS ===== */}
+      <section className="projects-section projects-section--enhanced" ref={projectsRef}>
+        <Suspense fallback={null}><GlowGrid /></Suspense>
 
-          <div className="projects-header">
-            <div className="projects-label">Recent work</div>
-          </div>
-
-          <div className="project-list">
-            {(projects || []).slice(0, 4).map((project, i) => (
-              <div key={project._id || i} className="project-item">
-                <a 
-                  href={project.liveUrl || project.githubUrl || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-image={project.image}
-                >
-                  <span className="project-name">{project.title}</span>
-                  <div className="project-meta">
-                    <div className="project-type">{project.techStack?.slice(0, 2).join(' & ') || 'Design & Development'}</div>
-                  </div>
-                </a>
-              </div>
-            ))}
-          </div>
-
-          <div className="more-work-wrapper">
-            <Link to="/work">
-              <button className="more-work-btn">More work</button>
-            </Link>
-          </div>
-        </section>
-
-        {/* PANEL 2: CTA (Absolute Right) */}
-        <div className="cta-panel" ref={ctaPanelRef}>
-          <CTASection />
+        <div className="projects-header">
+          <div className="projects-label">Recent work</div>
         </div>
 
-      </div>
+        <div className="project-list">
+          {(projects || []).slice(0, 4).map((project, i) => (
+            <div key={project._id || i} className="project-item">
+              <a 
+                href={project.liveUrl || project.githubUrl || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-image={project.image}
+              >
+                <span className="project-name">{project.title}</span>
+                <div className="project-meta">
+                  <div className="project-type">{project.techStack?.slice(0, 2).join(' & ') || 'Design & Development'}</div>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <div className="more-work-wrapper">
+          <Link to="/work">
+            <button className="more-work-btn">More work</button>
+          </Link>
+        </div>
+      </section>
+
+      {/* ===== CTA ===== */}
+      <CTASection />
 
       <Footer />
       </div>
