@@ -11,33 +11,32 @@ const Loader = ({ onComplete }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // Cycle through greetings
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
         if (prev < greetings.length - 1) return prev + 1;
         clearInterval(interval);
         return prev;
       });
-    }, 200);
+    }, 100);
 
-    // After cycling finishes (200ms * greetings.length = ~1800ms)
+    // After cycling finishes (100ms * greetings.length = ~900ms)
     // start the slide up animation
     const timeout = setTimeout(() => {
       if (textRef.current) {
-        gsap.to(textRef.current, { opacity: 0, duration: 0.3 });
+        gsap.to(textRef.current, { opacity: 0, duration: 0.2 });
       }
       
       if (loaderRef.current) {
         gsap.to(loaderRef.current.querySelectorAll('.loader-column'), {
           scaleY: 0,
-          duration: 0.8,
-          stagger: 0.05,
+          duration: 0.5,
+          stagger: 0.03,
           ease: 'power4.inOut',
           transformOrigin: 'top',
           onComplete
         });
       }
-    }, 2200);
+    }, 1100);
 
     return () => {
       clearInterval(interval);

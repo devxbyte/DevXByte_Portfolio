@@ -63,7 +63,14 @@ function App() {
           const heroData = heroRes.value.data;
           setHero(heroData);
           if (heroData?.image) {
-            const faviconUrl = heroData.image.startsWith('http') ? heroData.image : `${import.meta.env.VITE_BACKEND_URL}${heroData.image}`;
+            const getSafeFaviconUrl = (img) => {
+              if (!img) return '/Devendra_Saini.png';
+              if (img.includes('localhost') && !import.meta.env.DEV) return '/Devendra_Saini.png';
+              if (img.startsWith('http')) return img;
+              const safePath = img.startsWith('/') ? img : `/${img}`;
+              return `${import.meta.env.VITE_BACKEND_URL}${safePath}`;
+            };
+            const faviconUrl = getSafeFaviconUrl(heroData.image);
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.onload = () => {

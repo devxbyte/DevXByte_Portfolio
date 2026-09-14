@@ -53,23 +53,7 @@ const HomePage = ({ hero, about, projects, skills }) => {
       scrollTrigger: { trigger: '.skills-marquee', start: 'top 85%' }
     });
 
-    // Horizontal Scroll Sequence: Projects -> CTA
-    const ctaPanel = ctaPanelRef.current;
-    if (ctaPanel) {
-      // Pin at the bottom of the projects section, wait a bit, then slide CTA in from right
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: horizontalScrollRef.current,
-          start: 'bottom bottom', // Trigger when bottom of container hits bottom of viewport
-          pin: true,
-          scrub: 1, // smooth scrubbing
-          end: () => "+=" + window.innerWidth * 1.5 // Increased scroll distance
-        }
-      });
-
-      tl.to({}, { duration: 0.5 }) // Create a scroll "dead zone" so the More Work button is visible
-        .to(ctaPanel, { xPercent: -100, ease: 'none', duration: 1 });
-    }
+    // Removed horizontal scroll sequence
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
@@ -224,9 +208,7 @@ const HomePage = ({ hero, about, projects, skills }) => {
       </section>
 
       {/* ===== VERTICAL TO HORIZONTAL SCROLL CONTAINER ===== */}
-      <div className="horizontal-scroll-container" ref={horizontalScrollRef}>
-        
-        {/* PANEL 1: PROJECTS (Natural Height) */}
+        {/* PANEL 1: PROJECTS */}
         <section className="projects-section projects-section--enhanced" ref={projectsRef}>
           {/* Three.js Glow Grid Background — lazy loaded, skipped on mobile */}
           <Suspense fallback={null}><GlowGrid /></Suspense>
@@ -260,12 +242,8 @@ const HomePage = ({ hero, about, projects, skills }) => {
           </div>
         </section>
 
-        {/* PANEL 2: CTA (Absolute Right) */}
-        <div className="cta-panel" ref={ctaPanelRef}>
-          <CTASection />
-        </div>
-
-      </div>
+        {/* PANEL 2: CTA */}
+        <CTASection />
 
       <Footer />
       </div>
