@@ -17,26 +17,26 @@ const Loader = ({ onComplete }) => {
         clearInterval(interval);
         return prev;
       });
-    }, 100);
+    }, 180);
 
-    // After cycling finishes (100ms * greetings.length = ~900ms)
+    // After cycling finishes (180ms * greetings.length = ~1620ms)
     // start the slide up animation
     const timeout = setTimeout(() => {
       if (textRef.current) {
-        gsap.to(textRef.current, { opacity: 0, duration: 0.2 });
+        gsap.to(textRef.current, { opacity: 0, duration: 0.3, ease: 'power2.out' });
       }
       
       if (loaderRef.current) {
         gsap.to(loaderRef.current.querySelectorAll('.loader-column'), {
           scaleY: 0,
-          duration: 0.5,
-          stagger: 0.03,
-          ease: 'power4.inOut',
+          duration: 0.8,
+          stagger: 0.04,
+          ease: 'power3.inOut',
           transformOrigin: 'top',
           onComplete
         });
       }
-    }, 1100);
+    }, 2000);
 
     return () => {
       clearInterval(interval);
