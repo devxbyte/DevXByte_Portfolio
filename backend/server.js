@@ -8,6 +8,14 @@ const adminRoutes = require('./routes/adminRoutes');
 
 dotenv.config();
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', JSON.stringify(reason));
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
 const app = express();
 
 // Middleware
