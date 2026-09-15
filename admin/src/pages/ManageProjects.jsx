@@ -32,7 +32,7 @@ const ManageProjects = () => {
     setLoading(true);
     try {
       const res = await api.post('/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      setForm({ ...form, image: `${import.meta.env.VITE_BACKEND_URL}${res.data.url}` });
+      setForm({ ...form, image: res.data.url });
       toast.success('Image uploaded');
     } catch (err) {
       toast.error('Upload failed');
