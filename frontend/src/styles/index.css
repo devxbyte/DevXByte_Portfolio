@@ -2683,7 +2683,21 @@ textarea {
   }
 }
 
+/* CTA & Footer Overlay (Sticky Scroll Effect) */
+.cta-footer-overlay {
+  position: relative;
+  z-index: 20;
+  background-color: var(--bg-primary);
+}
 
+@media (max-width: 768px) {
+  .cta-footer-overlay {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
 
 /* MOBILE ID BADGE OVERRIDES (Moved to end for precedence) */
 @media (max-width: 768px) {

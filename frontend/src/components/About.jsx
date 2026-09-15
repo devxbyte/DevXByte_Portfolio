@@ -64,7 +64,7 @@ const HolographicImage = ({ image }) => {
               return `${import.meta.env.VITE_BACKEND_URL}${safePath}`;
             };
             const finalImage = getSafeImage(image);
-            return <img src={finalImage} alt="Profile" />;
+            return <img src={finalImage} alt="Profile" style={{ transform: 'scale(1.02)' }} />;
           })()}
         </div>
         <span className="holo-accent top-left"></span>

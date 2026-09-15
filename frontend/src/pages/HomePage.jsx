@@ -249,7 +249,7 @@ const HomePage = ({ hero, about, projects, skills }) => {
       </section>
 
       {/* ===== OVERLAPPING CTA & FOOTER ===== */}
-      <div className="cta-footer-overlay" style={{ position: 'relative', zIndex: 20, backgroundColor: 'var(--bg-primary)' }}>
+      <div className="cta-footer-overlay">
         {/* ===== CTA ===== */}
         <CTASection />
 
