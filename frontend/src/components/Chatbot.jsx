@@ -34,33 +34,51 @@ const Chatbot = () => {
     setInput('');
     setIsTyping(true);
 
+    const modelsToTry = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
+    let responseText = null;
+    let lastError = null;
+
+    // Filter out the initial greeting or any leading 'model' messages 
+    // because Gemini requires history to start with a 'user' role.
+    const history = messages
+      .filter((msg, index) => !(index === 0 && msg.role === 'assistant'))
+      .map(msg => ({
+        role: msg.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: msg.content }],
+      }));
+
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({ 
+          model: modelName,
+          systemInstruction: SYSTEM_INSTRUCTION
+        });
+        
+        const chat = model.startChat({
+          history: history,
+        });
+
+        const result = await chat.sendMessage(userMessage);
+        const response = await result.response;
+        responseText = response.text();
+        break; // Success, exit the fallback loop
+      } catch (err) {
+        console.warn(`Model ${modelName} failed:`, err.message);
+        lastError = err;
+        // Continue to the next model if it's a 404 or 503 or others
+      }
+    }
+
     try {
-      const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash",
-        systemInstruction: SYSTEM_INSTRUCTION
-      });
-      
-      // Filter out the initial greeting or any leading 'model' messages 
-      // because Gemini requires history to start with a 'user' role.
-      const history = messages
-        .filter((msg, index) => !(index === 0 && msg.role === 'assistant'))
-        .map(msg => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }],
-        }));
+      if (!responseText) {
+        throw lastError || new Error("All models failed to respond.");
+      }
 
-      const chat = model.startChat({
-        history: history,
-      });
-
-      const result = await chat.sendMessage(userMessage);
-      const response = await result.response;
-      const text = response.text();
-      let cleanText = text;
+      let cleanText = responseText;
 
       // Check if Gemini flagged this conversation as a lead
-      if (text.includes('[LEAD_DETECTED]')) {
-        cleanText = text.replace('[LEAD_DETECTED]', '').trim();
+      if (responseText.includes('[LEAD_DETECTED]')) {
+        cleanText = responseText.replace('[LEAD_DETECTED]', '').trim();
         
         // Auto-submit lead to the backend
         try {
