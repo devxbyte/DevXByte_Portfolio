@@ -63,6 +63,16 @@ const HomePage = ({ hero, about, projects, skills }) => {
       });
     }
 
+    // Preload project images for instant hover effect
+    if (projects && projects.length > 0) {
+      projects.slice(0, 4).forEach(project => {
+        if (project.image) {
+          const img = new Image();
+          img.src = project.image;
+        }
+      });
+    }
+
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
 

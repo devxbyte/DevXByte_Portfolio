@@ -73,18 +73,41 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
   try {
-    const newFile = new File({
-      filename: req.file.originalname,
-      contentType: req.file.mimetype,
-      data: req.file.buffer
-    });
-    const savedFile = await newFile.save();
-    const protocol = req.get('host').includes('localhost') ? 'http' : 'https';
-    const fileUrl = `${protocol}://${req.get('host')}/api/admin/file/${savedFile._id}`;
-    return res.json({ url: fileUrl, filename: req.file.originalname });
+    if (req.file.mimetype.startsWith('image/')) {
+      // Upload images to Cloudinary
+      const streamUpload = (req) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { 
+              folder: 'portfolio', 
+              transformation: [{ quality: 'auto', fetch_format: 'auto' }] 
+            },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          Readable.from(req.file.buffer).pipe(stream);
+        });
+      };
+
+      const result = await streamUpload(req);
+      return res.json({ url: result.secure_url, filename: req.file.originalname });
+    } else {
+      // Save PDFs and other files to MongoDB
+      const newFile = new File({
+        filename: req.file.originalname,
+        contentType: req.file.mimetype,
+        data: req.file.buffer
+      });
+      const savedFile = await newFile.save();
+      const protocol = req.get('host').includes('localhost') ? 'http' : 'https';
+      const fileUrl = `${protocol}://${req.get('host')}/api/admin/file/${savedFile._id}`;
+      return res.json({ url: fileUrl, filename: req.file.originalname });
+    }
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: 'Error saving file to database', error: err.message });
+    return res.status(500).json({ message: 'Error saving file', error: err.message });
   }
 });
 
@@ -95,6 +118,7 @@ router.get('/file/:id', async (req, res) => {
     if (!file) return res.status(404).json({ message: 'File not found' });
     
     res.set('Content-Type', file.contentType);
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.send(file.data);
   } catch (error) {
     console.error(error);

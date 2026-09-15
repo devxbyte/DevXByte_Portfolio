@@ -17,6 +17,16 @@ const WorkPage = ({ projects }) => {
         scrollTrigger: { trigger: item, start: 'top 85%' }
       });
     });
+    // Preload project images for instant hover effect
+    if (projects && projects.length > 0) {
+      projects.forEach(project => {
+        if (project.image) {
+          const img = new Image();
+          img.src = project.image;
+        }
+      });
+    }
+
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, [projects]);
 
