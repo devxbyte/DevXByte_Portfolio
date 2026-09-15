@@ -94,15 +94,7 @@ const ContactPage = () => {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-left">
-          <span>© 2025 Edition</span>
-        </div>
-        <div className="footer-socials">
-          <a href="https://github.com/devxbyte" target="_blank" rel="noopener noreferrer" className="footer-social">Github</a>
-          <a href="https://www.linkedin.com/in/devxbyte" target="_blank" rel="noopener noreferrer" className="footer-social">LinkedIn</a>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 };
