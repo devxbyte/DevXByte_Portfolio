@@ -3,10 +3,49 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { HiSun, HiMoon } from 'react-icons/hi';
 
+import { flushSync } from 'react-dom';
+
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+
+  const handleToggleTheme = (e) => {
+    if (!document.startViewTransition) {
+      toggleTheme();
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        toggleTheme();
+      });
+    });
+
+    transition.ready.then(() => {
+      // Create expanding circle animation
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 600,
+          easing: 'ease-out',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+  };
 
   const links = [
     { path: '/', label: 'Home' },
@@ -23,7 +62,7 @@ const Header = () => {
         </Link>
 
         <div className="header-right">
-          <button className="theme-btn" onClick={toggleTheme} id="theme-toggle">
+          <button className="theme-btn" onClick={handleToggleTheme} id="theme-toggle">
             {theme === 'dark' ? <HiSun /> : <HiMoon />}
           </button>
 
