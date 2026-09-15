@@ -36,7 +36,7 @@ const Chatbot = () => {
 
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-3.8-flash",
+        model: "gemini-1.5-flash",
         systemInstruction: SYSTEM_INSTRUCTION
       });
       
@@ -79,7 +79,14 @@ const Chatbot = () => {
       setMessages(prev => [...prev, { role: 'assistant', content: cleanText }]);
     } catch (error) {
       console.error("Chatbot Error:", error);
-      setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${error.message || 'Something went wrong.'}` }]);
+      let errorMessage = "Oops, something went wrong. Please try again later.";
+      if (error.message?.includes('503') || error.message?.includes('high demand')) {
+        errorMessage = "I'm currently experiencing high demand and taking a quick breather. Please try asking me again in a few moments!";
+      } else if (error.message) {
+        // Only show full error details if it's not a generic 503
+        errorMessage = `Error: ${error.message}`;
+      }
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsTyping(false);
     }
